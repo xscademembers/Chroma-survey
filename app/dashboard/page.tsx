@@ -37,8 +37,8 @@ const COLORS = ["#008080", "#0ea5a8", "#14b8a6", "#2dd4bf", "#5eead4", "#99f6e4"
 
 export default function DashboardPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("password");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [records, setRecords] = useState<PatientRecord[]>([]);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"submissions" | "analytics" | "settings">("submissions");
@@ -322,22 +322,44 @@ export default function DashboardPage() {
       <main className="mx-auto max-w-md p-6">
         <div className="rounded bg-white p-6 shadow">
           <h1 className="mb-4 text-xl font-semibold">Dashboard Login</h1>
+          <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="text"
+              name="fake-username"
+              autoComplete="username"
+              className="hidden"
+              tabIndex={-1}
+              aria-hidden="true"
+            />
+            <input
+              type="password"
+              name="fake-password"
+              autoComplete="new-password"
+              className="hidden"
+              tabIndex={-1}
+              aria-hidden="true"
+            />
           <input
             className="mb-3 w-full rounded border p-2"
+            name="dashboard_username"
+            autoComplete="off"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
           />
           <input
             className="mb-4 w-full rounded border p-2"
+            name="dashboard_password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
           />
-          <button className="w-full rounded bg-blue-600 p-2 text-white" onClick={login}>
+          <button className="w-full rounded bg-blue-600 p-2 text-white" type="submit" onClick={login}>
             Login
           </button>
+          </form>
         </div>
       </main>
     );

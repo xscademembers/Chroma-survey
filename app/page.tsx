@@ -270,14 +270,21 @@ export default function HomePage() {
               className="mt-4 w-full rounded-lg border border-slate-200 px-4 py-3 text-slate-700 outline-none ring-[#008080]/30 transition focus:ring-2"
               placeholder="1234567890"
               value={form.mobileNumber}
-              onChange={(e) => setForm({ ...form, mobileNumber: e.target.value })}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  mobileNumber: e.target.value.replace(/\D/g, "").slice(0, 10)
+                })
+              }
               inputMode="numeric"
+              maxLength={10}
+              pattern="\d{10}"
             />
             <button
               type="button"
               className="mt-4 w-full rounded-lg bg-[#008080] py-3 font-semibold text-white transition hover:bg-[#006666] disabled:cursor-not-allowed disabled:opacity-45"
               onClick={onContinueReturning}
-              disabled={!form.mobileNumber?.trim() || lookupLoading}
+              disabled={form.mobileNumber?.trim().length !== 10 || lookupLoading}
             >
               {lookupLoading ? "Checking..." : "Continue"}
             </button>
@@ -307,7 +314,14 @@ export default function HomePage() {
               className="mt-5 w-full rounded-lg border border-slate-200 px-4 py-3 text-slate-700 outline-none ring-[#008080]/30 transition focus:ring-2"
               placeholder="e.g. John Doe"
               value={form.fullName}
-              onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  fullName: e.target.value.replace(/[^A-Za-z ]/g, "")
+                })
+              }
+              inputMode="text"
+              pattern="[A-Za-z ]+"
             />
             <button
               type="button"
@@ -327,14 +341,21 @@ export default function HomePage() {
               className="mt-5 w-full rounded-lg border border-slate-200 px-4 py-3 text-slate-700 outline-none ring-[#008080]/30 transition focus:ring-2"
               placeholder="1234567890"
               value={form.mobileNumber}
-              onChange={(e) => setForm({ ...form, mobileNumber: e.target.value })}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  mobileNumber: e.target.value.replace(/\D/g, "").slice(0, 10)
+                })
+              }
               inputMode="numeric"
+              maxLength={10}
+              pattern="\d{10}"
             />
             <button
               type="button"
               className="mt-4 w-full rounded-lg bg-[#008080] py-3 font-semibold text-white transition hover:bg-[#006666] disabled:cursor-not-allowed disabled:opacity-45"
               onClick={() => nextStep("mobile")}
-              disabled={!form.mobileNumber?.trim()}
+              disabled={form.mobileNumber?.trim().length !== 10}
             >
               Next
             </button>
@@ -348,14 +369,20 @@ export default function HomePage() {
               className="mt-5 w-full rounded-lg border border-slate-200 px-4 py-3 text-slate-700 outline-none ring-[#008080]/30 transition focus:ring-2"
               placeholder="e.g. 30"
               value={form.age}
-              onChange={(e) => setForm({ ...form, age: e.target.value })}
+              onChange={(e) => {
+                const digitsOnly = e.target.value.replace(/\D/g, "").slice(0, 3);
+                const normalized = digitsOnly ? String(Math.min(Number(digitsOnly), 100)) : "";
+                setForm({ ...form, age: normalized });
+              }}
               inputMode="numeric"
+              maxLength={3}
+              pattern="^(100|[1-9]?[0-9])$"
             />
             <button
               type="button"
               className="mt-4 w-full rounded-lg bg-[#008080] py-3 font-semibold text-white transition hover:bg-[#006666] disabled:cursor-not-allowed disabled:opacity-45"
               onClick={() => nextStep("age")}
-              disabled={!form.age?.trim()}
+              disabled={!form.age?.trim() || Number(form.age) < 1 || Number(form.age) > 100}
             >
               Next
             </button>
@@ -396,7 +423,7 @@ export default function HomePage() {
               type="button"
               className="mt-4 w-full rounded-lg bg-[#008080] py-3 font-semibold text-white transition hover:bg-[#006666] disabled:cursor-not-allowed disabled:opacity-45"
               onClick={() => nextStep("address")}
-              disabled={!form.address?.trim()}
+              disabled={(form.address?.match(/[A-Za-z]/g)?.length ?? 0) < 5}
             >
               Next
             </button>
