@@ -1,14 +1,14 @@
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
-if (!uri) {
+if (!process.env.MONGODB_URI) {
   throw new Error("MONGODB_URI is missing.");
 }
+const MONGODB_URI: string = process.env.MONGODB_URI;
 
 const DB_NAME = "dr_sunita_db";
 
 async function seed() {
-  const client = new MongoClient(uri);
+  const client = new MongoClient(MONGODB_URI);
   await client.connect();
   const db = client.db(DB_NAME);
   const exists = await db.collection("admins").findOne({ username: "admin" });
